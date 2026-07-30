@@ -173,6 +173,7 @@ export function SideBar({
           className={cn(
             "flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors duration-200 w-full group relative dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white",
             pathname?.startsWith("/dashboard/apartments") &&
+              !pathname?.includes("/offers") &&
               "bg-accent font-medium dark:bg-gray-800 dark:text-white",
           )}
         >
@@ -185,6 +186,7 @@ export function SideBar({
         <Link
           href="/dashboard/apartments"
           onClick={onClose}
+          aria-label="Interested People"
           className={cn(
             "flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors duration-200 w-full group relative dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white",
             pathname?.startsWith("/dashboard/apartments") &&
@@ -194,7 +196,7 @@ export function SideBar({
         >
           <Users2 className="w-6 h-6 shrink-0 dark:text-gray-400" />
           <span className="md:hidden lg:block">Interested People</span>
-          <span className="hidden md:group-hover:block lg:group-hover:hidden absolute left-14 bg-popover text-popover-foreground px-2 py-1 rounded shadow-md text-xs z-50 whitespace-nowrap">
+          <span className="hidden md:group-hover:block lg:group-hover:hidden md:group-focus-within:block lg:group-focus-within:hidden absolute left-14 bg-popover text-popover-foreground px-2 py-1 rounded shadow-md text-xs z-50 whitespace-nowrap">
             Interested People
           </span>
         </Link>
