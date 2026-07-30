@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Bell, Building2, Heart, Home, PlusSquare, Shield, Users } from "lucide-react";
+import { Bell, Building2, Heart, Home, PlusSquare, Shield, UserCircle, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogoutButton } from "@/components/auth/LogoutButton";
@@ -119,6 +119,18 @@ export function SideBar({
         >
           <Users className="w-6 h-6 dark:text-gray-400" />
           <span>Users</span>
+        </Link>
+        <Link
+          href="/dashboard/profile"
+          onClick={onClose}
+          className={cn(
+            "flex items-center gap-2 p-2 rounded-lg hover:bg-accent transition-colors duration-200 w-full dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white",
+            pathname === "/dashboard/profile" &&
+              "bg-accent font-medium dark:bg-gray-800 dark:text-white",
+          )}
+        >
+          <UserCircle className="w-6 h-6 dark:text-gray-400" />
+          <span>Profile</span>
         </Link>
       </div>
       <div className="mt-auto w-full px-2 pb-4 pt-4 lg:px-4">
