@@ -31,7 +31,8 @@ export function HotelActionsMenu({ hotelId, onDeleteConfirmed }: HotelActionsMen
 
   const handleConfirmDelete = () => {
     // TODO: replace with Hasura DELETE mutation → DELETE FROM public.hotels WHERE id = $id
-    toast.success(`Hotel ${hotelId} deleted (stub)`);
+    // Once the mutation lands, replace with toast.success after a successful await
+    toast.info(`Delete requested for hotel #${hotelId} (stub — no backend wired)`);
     onDeleteConfirmed(hotelId);
     setDeleteOpen(false);
   };

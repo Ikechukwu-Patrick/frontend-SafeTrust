@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, MapPin, Building2, FileText } from "lucide-react";
@@ -57,6 +57,20 @@ export default function EditHotelPage() {
 
   const set = (field: keyof typeof form, value: string) =>
     setForm((prev) => ({ ...prev, [field]: value }));
+
+  useEffect(() => {
+    const next = STUB_HOTELS.find((h) => h.id === params.id);
+    if (next) {
+      setForm({
+        name: next.name,
+        description: next.description,
+        address: next.address,
+        location_area: next.location_area,
+        latitude: next.latitude,
+        longitude: next.longitude,
+      });
+    }
+  }, [params.id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
