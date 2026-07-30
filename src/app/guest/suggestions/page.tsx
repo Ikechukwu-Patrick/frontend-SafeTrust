@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Heart, MapPin, Bed, PawPrint, Bath } from "lucide-react";
 import { cn } from "@/lib/utils";
 import  HotelHeader from "@/components/hotel/HotelHeader";
@@ -51,6 +52,7 @@ const STUB_APARTMENTS = [
 ];
 
 export default function GuestSuggestionsPage() {
+  const router = useRouter();
   const [selectedId, setSelectedId] = useState(STUB_APARTMENTS[0].id);
   const [favorites, setFavorites] = useState<string[]>([]);
 
@@ -257,7 +259,7 @@ export default function GuestSuggestionsPage() {
 
               <button
                 onClick={() => {
-                  // TODO: wire to /rent/${selected.id}/escrow/create
+                  router.push(`/rent/${selected.id}/escrow/create`);
                 }}
                 className="rounded-xl bg-orange-500 hover:bg-orange-600
                            active:bg-orange-700 text-white font-bold
