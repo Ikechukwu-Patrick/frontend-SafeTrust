@@ -52,7 +52,12 @@ export default function EditApartmentPage({
 
       {/* Reuse NewApartmentForm with pre-filled stub data */}
       {/* TODO: pass real apartment data once Hasura query is wired */}
-      <NewApartmentForm initialData={STUB_APARTMENT} onSubmit={handleSubmit} />
+      <NewApartmentForm
+        initialData={STUB_APARTMENT}
+        onSubmit={handleSubmit} 
+        title="Edit apartment"
+        submitLabel="Save changes" 
+      />
     </div>
   );
 }

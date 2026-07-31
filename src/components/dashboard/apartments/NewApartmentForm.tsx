@@ -43,9 +43,12 @@ export interface ApartmentData {
 interface NewApartmentFormProps {
   initialData?: ApartmentData;
   onSubmit?: (event: React.FormEvent) => void;
+  title?: string;
+  submitLabel?: string;
 }
 
-export function NewApartmentForm({ initialData, onSubmit }: NewApartmentFormProps = {}) {
+export function NewApartmentForm({ initialData, onSubmit, title = "New apartment", 
+  submitLabel = "Regist" }: NewApartmentFormProps = {}) {
   const router = useRouter();
 
   // Use initialData if provided, otherwise default to empty strings/defaults
@@ -108,7 +111,7 @@ export function NewApartmentForm({ initialData, onSubmit }: NewApartmentFormProp
   return (
     <form onSubmit={handleSubmit}>
       <h1 className="mb-8 text-2xl font-bold text-gray-900 dark:text-gray-100">
-        New apartment
+        {title}
       </h1>
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -254,7 +257,7 @@ export function NewApartmentForm({ initialData, onSubmit }: NewApartmentFormProp
           disabled={isLoading}
           className="w-full bg-orange-500 py-3 text-base font-semibold text-white hover:bg-orange-600"
         >
-          {isLoading ? "Registering..." : "Regist"}
+          {isLoading ? "Processing..." : submitLabel}
         </Button>
       </div>
     </form>
