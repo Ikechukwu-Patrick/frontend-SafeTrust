@@ -61,7 +61,10 @@ export function ApartmentActionsMenu({
           Edit
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={handleDelete}
+          onSelect={(event) => {
+            if (!confirmingDelete) event.preventDefault();
+            handleDelete();
+          }}
           className={cn(
             "flex items-center gap-2 cursor-pointer",
             confirmingDelete
