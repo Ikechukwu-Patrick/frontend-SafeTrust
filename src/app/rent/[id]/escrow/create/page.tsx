@@ -5,16 +5,11 @@ import { EscrowPendingView } from "@/components/escrow/views/EscrowPendingView";
 
 // TODO: replace with Hasura query → public.apartments WHERE id = $id
 // and Hasura query → public.trustless_work_escrows WHERE apartment_id = $id
-const buildStubEscrow = (id: string) => ({
-  id,
-  invoiceNumber: `INV${id.replace(/-/g, "").slice(0, 12).toUpperCase()}`,
-  status: "pending_signature",
-  amount: 2400,
-  receiverAddress: "",
-  apartment: {
-    id,
+const STUB_APARTMENTS: Record<string, any> = {
+  "1": {
     name: "Moderno Apartamento en San José Centro",
     address: "Avenida Central, Centro, San José",
+    deposit: 2400,
     description:
       "Apartamento renovado con acabados de lujo, 2 habitaciones, 2 baños",
     beds: 2,
@@ -26,13 +21,51 @@ const buildStubEscrow = (id: string) => ({
       "/img/room3.png",
       "/img/room4.png",
     ],
-    owner: {
-      name: "Alberto Casas",
-      email: "albertoCasas100@gmail.com",
-      phone: "+506 64852179",
-    },
   },
-});
+  "2": {
+    name: "Suite Ejecutiva Sabana Norte",
+    address: "Calle 42, Sabana Norte, San José",
+    deposit: 1900,
+    description:
+      "Suite ejecutiva completamente amueblada con vista panorámica de la ciudad.",
+    beds: 2,
+    baths: 1,
+    petFriendly: true,
+    imageUrls: [
+      "/img/room2.png",
+      "/img/room1.png",
+      "/img/room3.png",
+      "/img/room4.png",
+    ],
+  },
+};
+
+const buildStubEscrow = (id: string) => {
+  const apt = STUB_APARTMENTS[id] || STUB_APARTMENTS["1"];
+
+  return {
+    id,
+    invoiceNumber: `INV${id.replace(/-/g, "").slice(0, 12).toUpperCase()}`,
+    status: "pending_signature",
+    amount: apt.deposit,
+    receiverAddress: "",
+    apartment: {
+      id,
+      name: apt.name,
+      address: apt.address,
+      description: apt.description,
+      beds: apt.beds,
+      baths: apt.baths,
+      petFriendly: apt.petFriendly,
+      imageUrls: apt.imageUrls,
+      owner: {
+        name: "Alberto Casas",
+        email: "albertoCasas100@gmail.com",
+        phone: "+506 64852179",
+      },
+    },
+  };
+};
 
 export default function EscrowCreatePage({
   params,
