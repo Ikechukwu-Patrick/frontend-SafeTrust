@@ -1,4 +1,3 @@
-// src/app/dashboard/apartments/[id]/edit/page.tsx
 "use client";
 
 import { use } from "react";
@@ -53,7 +52,7 @@ export default function EditApartmentPage({
 
       {/* Reuse NewApartmentForm with pre-filled stub data */}
       {/* TODO: pass real apartment data once Hasura query is wired */}
-      <NewApartmentForm onSubmit={handleSubmit} />
+      <NewApartmentForm initialData={STUB_APARTMENT} onSubmit={handleSubmit} />
     </div>
   );
 }
