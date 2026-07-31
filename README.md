@@ -78,16 +78,6 @@ Then open `.env.local` and fill in each value — follow the **Environment Varia
 npm run dev
 ```
 
-```
-   ▲ Next.js 15.5.15
-   - Local:        http://localhost:3000
-   - Network:      http://192.168.x.x:3000
-   - Environments: .env
-
- ✓ Starting...
- ✓ Ready in 4s
-```
-
 This repo runs on **port 3000 by default**. You only need to override the port with `npm run dev -- --port 3001` if you are *also* running `landing-SafeTrust` locally at the same time — see [Port Conventions](#-port-conventions) below.
 
 ---
