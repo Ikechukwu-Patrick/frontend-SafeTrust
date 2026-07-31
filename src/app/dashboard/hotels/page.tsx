@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { PlusCircle } from "lucide-react";
+import { HotelActionsMenu } from "@/components/dashboard/hotels/HotelActionsMenu";
 
 // TODO: replace with Hasura query → public.hotels
 const STUB_HOTELS = [
@@ -27,6 +30,11 @@ const STUB_HOTELS = [
 ];
 
 export default function HotelsPage() {
+  const handleDeleteConfirmed = (id: string) => {
+    // TODO: trigger Hasura DELETE mutation → DELETE FROM public.hotels WHERE id = $id
+    console.warn(`Delete hotel ${id} — not yet wired to backend`);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -91,13 +99,10 @@ export default function HotelsPage() {
                   {hotel.description}
                 </td>
                 <td className="px-4 py-3">
-                  <Link
-                    href={`/dashboard/hotels/${hotel.id}`}
-                    className="text-sm font-medium text-orange-500
-                               hover:text-orange-600 transition-colors"
-                  >
-                    View →
-                  </Link>
+                  <HotelActionsMenu
+                    hotelId={hotel.id}
+                    onDeleteConfirmed={handleDeleteConfirmed}
+                  />
                 </td>
               </tr>
             ))}
