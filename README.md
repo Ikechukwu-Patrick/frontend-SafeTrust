@@ -237,8 +237,8 @@ npm run test:coverage # coverage report
 
 [SafeTrust Figma](https://www.figma.com/design/CVg9hoim0f1FIlozIar7ZZ/SafeTrust?node-id=0-1&node-type=canvas&t=LCzPmGeJfVxCMWTT-0)
 
----
+## 📜 License
 
-🌟 **Join SafeTrust today and revolutionize the way you manage P2P transactions!** 🌟
+© 2026 SafeTrust. Released under the [MIT License](https://opensource.org/license/MIT).
 
 ---
