@@ -1,50 +1,79 @@
 "use client";
 
-import { HotelHeader } from "@/components/hotel";
-import Link from "next/link";
 import { use } from "react";
+import { EscrowPendingView } from "@/components/escrow/views/EscrowPendingView";
 
-export default function HotelEscrowCreatePage({
+// TODO: replace with Hasura query → public.apartments WHERE id = $id
+// and Hasura query → public.trustless_work_escrows WHERE apartment_id = $id
+const STUB_APARTMENTS: Record<string, any> = {
+  "1": {
+    name: "Moderno Apartamento en San José Centro",
+    address: "Avenida Central, Centro, San José",
+    deposit: 2400,
+    description:
+      "Apartamento renovado con acabados de lujo, 2 habitaciones, 2 baños",
+    beds: 2,
+    baths: 1,
+    petFriendly: true,
+    imageUrls: [
+      "/img/room1.png",
+      "/img/room2.png",
+      "/img/room3.png",
+      "/img/room4.png",
+    ],
+  },
+  "2": {
+    name: "Suite Ejecutiva Sabana Norte",
+    address: "Calle 42, Sabana Norte, San José",
+    deposit: 1900,
+    description:
+      "Suite ejecutiva completamente amueblada con vista panorámica de la ciudad.",
+    beds: 2,
+    baths: 1,
+    petFriendly: true,
+    imageUrls: [
+      "/img/room2.png",
+      "/img/room1.png",
+      "/img/room3.png",
+      "/img/room4.png",
+    ],
+  },
+};
+
+const buildStubEscrow = (id: string) => {
+  const apt = STUB_APARTMENTS[id] || STUB_APARTMENTS["1"];
+
+  return {
+    id,
+    invoiceNumber: `INV${id.replace(/-/g, "").slice(0, 12).toUpperCase()}`,
+    status: "pending_signature",
+    amount: apt.deposit,
+    receiverAddress: "",
+    apartment: {
+      id,
+      name: apt.name,
+      address: apt.address,
+      description: apt.description,
+      beds: apt.beds,
+      baths: apt.baths,
+      petFriendly: apt.petFriendly,
+      imageUrls: apt.imageUrls,
+      owner: {
+        name: "Alberto Casas",
+        email: "albertoCasas100@gmail.com",
+        phone: "+506 64852179",
+      },
+    },
+  };
+};
+
+export default function EscrowCreatePage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const resolvedParams = use(params);
+  const { id } = use(params);
+  const escrow = buildStubEscrow(id);
 
-  return (
-    <div className="min-h-screen bg-[#faf7f3]">
-      <HotelHeader />
-      <main className="mx-auto max-w-[860px] px-6 py-16">
-        <div className="rounded-[18px] border border-[#e7ddd5] bg-white p-8 shadow-sm">
-          <span className="inline-flex rounded-full bg-[#fff1e7] px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-[#ff6a00]">
-            Escrow flow
-          </span>
-          <h1 className="mt-5 text-[34px] font-semibold tracking-[-0.04em] text-[#1d1d1d]">
-            Create escrow for apartment {resolvedParams.id}
-          </h1>
-          <p className="mt-4 max-w-[620px] text-base leading-7 text-[#666666]">
-            This route is wired so the BOOK button from the apartment detail
-            page lands on a valid escrow creation screen instead of a 404. The
-            full escrow form can be layered onto this route in the follow-up
-            issue.
-          </p>
-
-          <div className="mt-8 flex flex-wrap gap-4">
-            <Link
-              href={`/rent/${resolvedParams.id}`}
-              className="rounded-[10px] border border-[#d7cdc4] px-5 py-3 text-sm font-medium text-[#282828]"
-            >
-              Back to apartment
-            </Link>
-            <Link
-              href="/rent"
-              className="rounded-[10px] bg-[#ff6a00] px-5 py-3 text-sm font-semibold text-white"
-            >
-              Browse more apartments
-            </Link>
-          </div>
-        </div>
-      </main>
-    </div>
-  );
+  return <EscrowPendingView escrow={escrow} />;
 }
