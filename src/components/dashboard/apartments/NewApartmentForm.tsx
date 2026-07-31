@@ -29,9 +29,26 @@ const ROOM_OPTIONS = ["1", "2", "3", "4", "5"];
 const BATH_OPTIONS = ["1", "2", "3", "4"];
 const PROMOTION_OPTIONS = ["0", "5", "10", "15", "20", "25"];
 
-export function NewApartmentForm() {
+export interface ApartmentData {
+  name?: string;
+  location?: string;
+  amount?: string;
+  promotion?: string;
+  details?: string;
+  rooms?: string;
+  baths?: string;
+  petFriendly?: boolean;
+}
+
+interface NewApartmentFormProps {
+  initialData?: ApartmentData;
+  onSubmit?: (event: React.FormEvent) => void;
+}
+
+export function NewApartmentForm({ initialData, onSubmit }: NewApartmentFormProps = {}) {
   const router = useRouter();
 
+  // Use initialData if provided, otherwise default to empty strings/defaults
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [amount, setAmount] = useState("");
@@ -47,6 +64,13 @@ export function NewApartmentForm() {
     setIsLoading(true);
 
     try {
+      // If a parent component passed an onSubmit, use it and stop here.
+      if (onSubmit) {
+        await onSubmit(event);
+        return;
+      }
+
+      // Otherwise, do the default creation logic
       await new Promise((resolve) => setTimeout(resolve, 800));
       router.push("/dashboard/apartments");
     } finally {
