@@ -174,7 +174,7 @@ export function SideBar({
             "flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors duration-200 w-full group relative dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white",
             pathname?.startsWith("/dashboard/apartments") &&
               !pathname?.includes("/offers") &&
-              !pathname?.includes("/new") &&
+              pathname !== "/dashboard/apartments/new" &&
               "bg-accent font-medium dark:bg-gray-800 dark:text-white",
           )}
         >

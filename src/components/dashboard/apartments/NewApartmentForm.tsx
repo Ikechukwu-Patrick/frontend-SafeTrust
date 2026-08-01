@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Home, MapPin, DollarSign, Plus, X, ImageIcon } from "lucide-react";
@@ -25,7 +25,6 @@ export interface ApartmentData {
   petFriendly?: boolean;
 }
 
-
 interface NewApartmentFormProps {
   initialData?: ApartmentData;
   onSubmit?: (event: React.FormEvent) => void;
@@ -39,26 +38,128 @@ export function NewApartmentForm({ initialData, onSubmit, title = "New apartment
   const { address, token } = useGlobalAuthenticationStore();
 
   // Decode uid from Firebase JWT token
-  const ownerAddress = (() => {
+  const ownerAddress = useMemo(() => {
     if (address) return address;
-
-    const activeToken =
-      token ||
-      (() => {
-        try {
-          const raw =
-            typeof window !== "undefined"
-              ? localStorage.getItem("safetrust-auth")
-              : null;
-          return JSON.parse(raw ?? "{}").state?.token ?? null;
-        } catch {
-          return null;
-        }
-      })();
-
-    if (!activeToken) return null;
+    if (!token) return null;
 
     try {
+      const base64 = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+      const payload = JSON.parse(atob(base64));
+      return payload.user_id || payload.sub || null;
+    } catch {
+      return null;
+    }
+  }, [address, token]);
+
+  const getLocalYMD = () => {
+    const tzOffset = new Date().getTimezoneOffset() * 60000;
+    return new Date(Date.now() - tzOffset).toISOString().split("T")[0];
+  };
+
+  // ── Form state ──────────────────────────────────────────────────────────────
+  const [name, setName] = useState(initialData?.name || "");
+  const [description, setDescription] = useState(initialData?.details || "");
+  const [price, setPrice] = useState(initialData?.amount || "");
+  const [warrantyDeposit, setWarrantyDeposit] = useState("");
+  const [street, setStreet] = useState(initialData?.location || "");
+  const [neighborhood, setNeighborhood] = useState("");
+  const [city, setCity] = useState("San José");
+  const [country, setCountry] = useState("Costa Rica");
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
+  const [bedrooms, setBedrooms] = useState(initialData?.rooms || "2");
+  const [bathrooms, setBathrooms] = useState(initialData?.baths || "1");
+  const [petFriendly, setPetFriendly] = useState(initialData?.petFriendly || false);
+  const [isAvailable, setIsAvailable] = useState(true);
+  const [availableFrom, setAvailableFrom] = useState(getLocalYMD());
+  const [availableUntil, setAvailableUntil] = useState("");
+  const [imageUrls, setImageUrls] = useState<string[]>([""]);
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
+
+  // ── Stub submit (no Apollo) ─────────────────────────────────────────────────
+  const [loading, setLoading] = useState(false);
+
+  // ── Image URL handlers ───────────────────────────────────────────────────────
+  const addImageUrl = () => setImageUrls((prev) => [...prev, ""]);
+
+  const updateImageUrl = (index: number, value: string) => {
+    setImageUrls((prev) => prev.map((url, i) => (i === index ? value : url)));
+    setFailedImages((prev) => {
+      const next = new Set(prev);
+      next.delete(value);
+      return next;
+    });
+  };
+
+  const removeImageUrl = (index: number) => {
+    setImageUrls((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // ── Submit ───────────────────────────────────────────────────────────────────
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!ownerAddress) {
+      toast.error("You must be logged in to create an apartment");
+      return;
+    }
+
+    if (!price || isNaN(Number(price)) || Number(price) <= 0) {
+      toast.error("Please enter a valid price");
+      return;
+    }
+
+    if (
+      !warrantyDeposit ||
+      isNaN(Number(warrantyDeposit)) ||
+      Number(warrantyDeposit) <= 0
+    ) {
+      toast.error("Please enter a valid warranty deposit");
+      return;
+    }
+
+    const lat = parseFloat(latitude);
+    const lng = parseFloat(longitude);
+    if (!isNaN(lat) && (lat < -90 || lat > 90)) {
+      toast.error("Latitude must be between -90 and 90");
+      return;
+    }
+    if (!isNaN(lng) && (lng < -180 || lng > 180)) {
+      toast.error("Longitude must be between -180 and 180");
+      return;
+    }
+
+    if (availableUntil && new Date(availableUntil) <= new Date(availableFrom)) {
+      toast.error("Available Until must be later than Available From");
+      return;
+    }
+
+    const filteredImageUrls = imageUrls.filter((url) => url.trim() !== "");
+
+    const payload = {
+      owner_id: ownerAddress,
+      name: name.trim(),
+      description: description.trim() || null,
+      price: parseFloat(price),
+      warranty_deposit: parseFloat(warrantyDeposit),
+      address: {
+        street: street.trim(),
+        neighborhood: neighborhood.trim(),
+        city: city.trim(),
+        country: country.trim(),
+      },
+      coordinates: !isNaN(lat) && !isNaN(lng) ? `(${lat},${lng})` : null,
+      is_available: isAvailable,
+      available_from: new Date(availableFrom).toISOString(),
+      available_until: availableUntil ? new Date(availableUntil).toISOString() : null,
+      image_urls: filteredImageUrls.length > 0 ? filteredImageUrls : null,
+      bedrooms: parseInt(bedrooms, 10),
+      bathrooms: parseInt(bathrooms, 10),
+      pet_friendly: petFriendly,
+    };
+
+    // TODO: wire to Hasura mutation → INSERT INTO public.apartments using payload
+
     try {
       if (onSubmit) {
         setLoading(true);
@@ -212,12 +313,13 @@ export function NewApartmentForm({ initialData, onSubmit, title = "New apartment
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
                 <Label>Bedrooms</Label>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2" role="group" aria-label="Bedrooms">
                   {BEDROOM_OPTIONS.map((opt) => (
                     <button
                       key={opt}
                       type="button"
                       onClick={() => setBedrooms(opt)}
+                      aria-pressed={bedrooms === opt}
                       className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
                         bedrooms === opt
                           ? "bg-orange-500 text-white border-orange-500"
@@ -231,12 +333,13 @@ export function NewApartmentForm({ initialData, onSubmit, title = "New apartment
               </div>
               <div className="space-y-2">
                 <Label>Bathrooms</Label>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2" role="group" aria-label="Bathrooms">
                   {BATHROOM_OPTIONS.map((opt) => (
                     <button
                       key={opt}
                       type="button"
                       onClick={() => setBathrooms(opt)}
+                      aria-pressed={bathrooms === opt}
                       className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
                         bathrooms === opt
                           ? "bg-orange-500 text-white border-orange-500"
@@ -352,10 +455,10 @@ export function NewApartmentForm({ initialData, onSubmit, title = "New apartment
               {imageUrls.some((url) => url.trim() !== "") && (
                 <div className="grid grid-cols-3 gap-2 mt-2">
                   {imageUrls
-                    .filter((url) => url.trim() !== "")
+                    .filter((url) => url.trim() !== "" && !failedImages.has(url))
                     .map((url, index) => (
                       <div
-                        key={index}
+                        key={url}
                         className="relative aspect-[4/3] rounded-lg overflow-hidden bg-muted border border-border"
                       >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -363,9 +466,8 @@ export function NewApartmentForm({ initialData, onSubmit, title = "New apartment
                           src={url}
                           alt={`Preview ${index + 1}`}
                           className="w-full h-full object-cover"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).style.display =
-                              "none";
+                          onError={() => {
+                            setFailedImages((prev) => new Set(prev).add(url));
                           }}
                         />
                       </div>
@@ -381,6 +483,7 @@ export function NewApartmentForm({ initialData, onSubmit, title = "New apartment
           <Button
             type="button"
             variant="outline"
+            disabled={loading}
             onClick={() => router.push("/dashboard/apartments")}
           >
             Cancel

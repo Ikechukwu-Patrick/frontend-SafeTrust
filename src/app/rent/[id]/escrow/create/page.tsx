@@ -1,6 +1,7 @@
 "use client";
 
 import { use } from "react";
+import { notFound } from "next/navigation";
 
 
 // TODO: replace with Hasura query → public.apartments WHERE id = $id
@@ -72,15 +73,31 @@ export default function EscrowCreatePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  if (process.env.NODE_ENV === "production") {
+    notFound();
+  }
+
   const { id } = use(params);
   const escrow = buildStubEscrow(id);
+
+  // Allowlist status model excluding sensitive owner info
+  const displayEscrow = {
+    ...escrow,
+    apartment: {
+      ...escrow.apartment,
+      owner: {
+        name: escrow.apartment.owner.name,
+        // email and phone explicitly excluded
+      },
+    },
+  };
 
   return (
     <div className="p-6 text-center">
       <h2 className="text-xl font-semibold mb-2">Escrow Creation (Stub)</h2>
       <p className="text-muted-foreground">This view is pending implementation.</p>
       <pre className="text-left bg-muted p-4 mt-4 rounded overflow-auto text-xs">
-        {JSON.stringify(escrow, null, 2)}
+        {JSON.stringify(displayEscrow, null, 2)}
       </pre>
     </div>
   );
