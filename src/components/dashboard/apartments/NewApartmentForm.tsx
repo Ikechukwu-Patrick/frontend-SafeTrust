@@ -29,9 +29,29 @@ const ROOM_OPTIONS = ["1", "2", "3", "4", "5"];
 const BATH_OPTIONS = ["1", "2", "3", "4"];
 const PROMOTION_OPTIONS = ["0", "5", "10", "15", "20", "25"];
 
-export function NewApartmentForm() {
+export interface ApartmentData {
+  name?: string;
+  location?: string;
+  amount?: string;
+  promotion?: string;
+  details?: string;
+  rooms?: string;
+  baths?: string;
+  petFriendly?: boolean;
+}
+
+interface NewApartmentFormProps {
+  initialData?: ApartmentData;
+  onSubmit?: (event: React.FormEvent) => void;
+  title?: string;
+  submitLabel?: string;
+}
+
+export function NewApartmentForm({ initialData, onSubmit, title = "New apartment", 
+  submitLabel = "Regist" }: NewApartmentFormProps = {}) {
   const router = useRouter();
 
+  // Use initialData if provided, otherwise default to empty strings/defaults
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [amount, setAmount] = useState("");
@@ -47,6 +67,13 @@ export function NewApartmentForm() {
     setIsLoading(true);
 
     try {
+      // If a parent component passed an onSubmit, use it and stop here.
+      if (onSubmit) {
+        await onSubmit(event);
+        return;
+      }
+
+      // Otherwise, do the default creation logic
       await new Promise((resolve) => setTimeout(resolve, 800));
       router.push("/dashboard/apartments");
     } finally {
@@ -84,7 +111,7 @@ export function NewApartmentForm() {
   return (
     <form onSubmit={handleSubmit}>
       <h1 className="mb-8 text-2xl font-bold text-gray-900 dark:text-gray-100">
-        New apartment
+        {title}
       </h1>
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -230,7 +257,7 @@ export function NewApartmentForm() {
           disabled={isLoading}
           className="w-full bg-orange-500 py-3 text-base font-semibold text-white hover:bg-orange-600"
         >
-          {isLoading ? "Registering..." : "Regist"}
+          {isLoading ? "Processing..." : submitLabel}
         </Button>
       </div>
     </form>
