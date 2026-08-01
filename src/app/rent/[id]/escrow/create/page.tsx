@@ -1,7 +1,7 @@
 "use client";
 
 import { use } from "react";
-import { EscrowPendingView } from "@/components/escrow/views/EscrowPendingView";
+
 
 // TODO: replace with Hasura query → public.apartments WHERE id = $id
 // and Hasura query → public.trustless_work_escrows WHERE apartment_id = $id
@@ -75,5 +75,13 @@ export default function EscrowCreatePage({
   const { id } = use(params);
   const escrow = buildStubEscrow(id);
 
-  return <EscrowPendingView escrow={escrow} />;
+  return (
+    <div className="p-6 text-center">
+      <h2 className="text-xl font-semibold mb-2">Escrow Creation (Stub)</h2>
+      <p className="text-muted-foreground">This view is pending implementation.</p>
+      <pre className="text-left bg-muted p-4 mt-4 rounded overflow-auto text-xs">
+        {JSON.stringify(escrow, null, 2)}
+      </pre>
+    </div>
+  );
 }
