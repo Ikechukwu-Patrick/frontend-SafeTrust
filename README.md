@@ -145,12 +145,6 @@ Tests live in `__tests__/` or as `.test.ts(x)` files. E2E tests in `cypress/e2e/
 
 ---
 
-## Design
-
-[SafeTrust Figma](https://www.figma.com/design/CVg9hoim0f1FIlozIar7ZZ/SafeTrust?node-id=0-1)
-
----
-
 ## Contributing
 
 1. `npm run dev` — must start without errors.
