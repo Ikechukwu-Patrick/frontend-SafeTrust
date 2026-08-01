@@ -25,6 +25,7 @@ export interface ApartmentData {
   petFriendly?: boolean;
 }
 
+
 interface NewApartmentFormProps {
   initialData?: ApartmentData;
   onSubmit?: (event: React.FormEvent) => void;
@@ -58,100 +59,6 @@ export function NewApartmentForm({ initialData, onSubmit, title = "New apartment
     if (!activeToken) return null;
 
     try {
-      // Use atob() — browser-native, no Buffer needed
-      const base64 = activeToken
-        .split(".")[1]
-        .replace(/-/g, "+")
-        .replace(/_/g, "/");
-      const payload = JSON.parse(atob(base64));
-      return payload.user_id || payload.sub || null;
-    } catch {
-      return null;
-    }
-  })();
-
-  // ── Form state ──────────────────────────────────────────────────────────────
-  const [name, setName] = useState(initialData?.name || "");
-  const [description, setDescription] = useState(initialData?.details || "");
-  const [price, setPrice] = useState(initialData?.amount || "");
-  const [warrantyDeposit, setWarrantyDeposit] = useState("");
-  const [street, setStreet] = useState(initialData?.location || "");
-  const [neighborhood, setNeighborhood] = useState("");
-  const [city, setCity] = useState("San José");
-  const [country, setCountry] = useState("Costa Rica");
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
-  const [bedrooms, setBedrooms] = useState(initialData?.rooms || "2");
-  const [bathrooms, setBathrooms] = useState(initialData?.baths || "1");
-  const [petFriendly, setPetFriendly] = useState(initialData?.petFriendly || false);
-  const [isAvailable, setIsAvailable] = useState(true);
-  const [availableFrom, setAvailableFrom] = useState(
-    new Date().toISOString().split("T")[0],
-  );
-  const [availableUntil, setAvailableUntil] = useState("");
-  const [imageUrls, setImageUrls] = useState<string[]>([""]);
-
-  // ── Stub submit (no Apollo) ─────────────────────────────────────────────────
-  const [loading, setLoading] = useState(false);
-
-  // ── Image URL handlers ───────────────────────────────────────────────────────
-  const addImageUrl = () => setImageUrls((prev) => [...prev, ""]);
-
-  const updateImageUrl = (index: number, value: string) => {
-    setImageUrls((prev) => prev.map((url, i) => (i === index ? value : url)));
-  };
-
-  const removeImageUrl = (index: number) => {
-    setImageUrls((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  // ── Submit ───────────────────────────────────────────────────────────────────
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!ownerAddress) {
-      toast.error("You must be logged in to create an apartment");
-      return;
-    }
-
-    if (!price || isNaN(Number(price)) || Number(price) <= 0) {
-      toast.error("Please enter a valid price");
-      return;
-    }
-
-    if (
-      !warrantyDeposit ||
-      isNaN(Number(warrantyDeposit)) ||
-      Number(warrantyDeposit) <= 0
-    ) {
-      toast.error("Please enter a valid warranty deposit");
-      return;
-    }
-
-    // TODO: wire to Hasura mutation → INSERT INTO public.apartments
-    // GraphQL mutation: CREATE_APARTMENT in graphql/queries/apartment-queries.ts
-    // Payload shape (from dApp-SafeTrust NewApartmentForm.tsx):
-    // {
-    //   owner_id: ownerAddress,           -- Firebase UID from JWT
-    //   name: name.trim(),
-    //   description: description.trim() || null,
-    //   price: parseFloat(price),
-    //   warranty_deposit: parseFloat(warrantyDeposit),
-    //   address: {
-    //     street: street.trim(),
-    //     neighborhood: neighborhood.trim(),
-    //     city: city.trim(),
-    //     country: country.trim(),
-    //   },
-    //   coordinates: `(${lat},${lng})`,   -- PostGIS Point
-    //   is_available: isAvailable,
-    //   available_from: new Date(availableFrom).toISOString(),
-    //   available_until: availableUntil
-    //     ? new Date(availableUntil).toISOString()
-    //     : null,
-    //   image_urls: filteredImageUrls.length > 0 ? filteredImageUrls : null,
-    // }
-
     try {
       if (onSubmit) {
         setLoading(true);

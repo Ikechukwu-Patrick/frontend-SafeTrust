@@ -119,8 +119,13 @@ export function MyApartmentsTable() {
                   </TableCell>
                   <TableCell>
                     <ApartmentActionsMenu
-                      apartmentId={Number(apartment.id)}
-                      onDeleteConfirmed={handleDeleteConfirmed}
+                        apartmentId={apartment.id}
+                        apartmentName={apartment.name}
+                        onDeleteConfirm={(id) => {
+                          // Remove from local stub state for now
+                          // TODO: trigger Hasura DELETE mutation
+                          console.warn(`Delete apartment ${id} — not yet wired to backend`);
+                        }}
                     />
                   </TableCell>
                 </TableRow>
