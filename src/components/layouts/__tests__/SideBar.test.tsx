@@ -38,4 +38,12 @@ describe("SideBar", () => {
     fireEvent.click(profileLink);
     expect(handleClose).toHaveBeenCalled();
   });
+
+  it("renders a Messages link with the unread badge", () => {
+    render(<SideBar />);
+    const messagesLink = screen.getByRole("link", { name: /messages/i });
+    expect(messagesLink).toBeInTheDocument();
+    expect(messagesLink).toHaveAttribute("href", "/dashboard/messages");
+    expect(screen.getByText("3")).toBeInTheDocument();
+  });
 });
