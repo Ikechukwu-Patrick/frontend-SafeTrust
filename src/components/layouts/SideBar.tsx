@@ -1,10 +1,11 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Bell, Building2, Heart, Home, Hotel, LayoutDashboard, PlusCircle, PlusSquare, Shield, Users, Users2 } from "lucide-react";
+import { Bell, Building2, Heart, Home, Hotel, LayoutDashboard, MessageSquare, PlusCircle, PlusSquare, Shield, Users, Users2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogoutButton } from "@/components/auth/LogoutButton";
+import { UnreadBadge } from "@/components/messages/UnreadBadge";
 
 interface SideBarProps {
   className?: string;
@@ -22,6 +23,7 @@ export function SideBar({
   variant = "permanent",
 }: SideBarProps) {
   const pathname = usePathname();
+  const user = { uid: "mock-guest-1" };
 
   return (
     <div
@@ -142,6 +144,22 @@ export function SideBar({
           {/* Tooltip for rail mode */}
           <span className="hidden md:group-hover:block lg:group-hover:hidden absolute left-14 bg-popover text-popover-foreground px-2 py-1 rounded shadow-md text-xs z-50 whitespace-nowrap">
             Notifications
+          </span>
+        </Link>
+        <Link
+          href="/dashboard/messages"
+          onClick={onClose}
+          className={cn(
+            "flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors duration-200 w-full relative group dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white",
+            pathname?.startsWith("/dashboard/messages") &&
+              "bg-accent font-medium dark:bg-gray-800 dark:text-white",
+          )}
+        >
+          <MessageSquare className="w-6 h-6 shrink-0 dark:text-gray-400" />
+          <span className="md:hidden lg:block">Messages</span>
+          <UnreadBadge userId={user.uid} />
+          <span className="hidden md:group-hover:block lg:group-hover:hidden absolute left-14 bg-popover text-popover-foreground px-2 py-1 rounded shadow-md text-xs z-50 whitespace-nowrap">
+            Messages
           </span>
         </Link>
         <Link
