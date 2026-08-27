@@ -35,7 +35,7 @@ export function AutomatedEventMessage({ message }: { message: AutomatedMessage }
     <div style={containerStyle}>
       <Icon size={16} color={style.color} strokeWidth={2.2} />
       <div>
-        <p style={{ margin: 0, fontSize: '0.85rem', color: '#374151', fontWeight: 500 }}>
+        <p style={{ margin: 0, fontSize: '0.85rem', color: '#374151', fontWeight: 500, whiteSpace: 'pre-wrap' }}>
           {message.body}
         </p>
         <p style={{ margin: '0.15rem 0 0', fontSize: '0.75rem', color: '#9ca3af' }}>
