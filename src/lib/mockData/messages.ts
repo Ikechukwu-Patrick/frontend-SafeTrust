@@ -7,7 +7,7 @@ export const MOCK_CURRENT_USER = {
 export const MOCK_CONVERSATIONS = [
   {
     id: "conv-1",
-    last_message_at: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+    last_message_at: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
     apartment: { name: "Downtown Loft Apartment" },
     host: {
       id: "mock-host-1",
