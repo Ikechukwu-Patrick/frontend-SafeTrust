@@ -21,6 +21,15 @@ function isProtected(pathname: string): boolean {
     return false;
   }
 
+  // Protected routes must take precedence over static-file exclusions.
+  if (
+    PROTECTED_PREFIXES.some(
+      (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+    )
+  ) {
+    return true;
+  }
+
   // Next.js internals and static assets should pass through untouched.
   if (
     pathname.startsWith("/_next/") ||
@@ -32,9 +41,7 @@ function isProtected(pathname: string): boolean {
     return false;
   }
 
-  return PROTECTED_PREFIXES.some(
-    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
-  );
+  return false;
 }
 
 export function middleware(req: NextRequest) {
