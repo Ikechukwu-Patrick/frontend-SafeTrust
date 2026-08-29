@@ -1,7 +1,9 @@
 "use client";
 
-import { HotelHeader } from "@/components/hotel";
-import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { getHotelById } from "@/lib/mockData/hotels";
+import { Bath, BedDouble, Lock, MapPin, PawPrint } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { use } from "react";
 
 export default function HotelEscrowCreatePage({
@@ -9,42 +11,98 @@ export default function HotelEscrowCreatePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const router = useRouter();
   const resolvedParams = use(params);
+  const apartment = getHotelById(resolvedParams.id);
+  const imageSrc = apartment.images?.[0] ?? "/img/room1.png";
+  const warrantyDeposit = Math.max(2400, Math.round(apartment.price * 0.6));
 
   return (
-    <div className="min-h-screen bg-[#faf7f3]">
-      <HotelHeader />
-      <main className="mx-auto max-w-[860px] px-6 py-16">
-        <div className="rounded-[18px] border border-[#e7ddd5] bg-white p-8 shadow-sm">
-          <span className="inline-flex rounded-full bg-[#fff1e7] px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-[#ff6a00]">
-            Escrow flow
-          </span>
-          <h1 className="mt-5 text-[34px] font-semibold tracking-[-0.04em] text-[#1d1d1d]">
-            Create escrow for apartment {resolvedParams.id}
-          </h1>
-          <p className="mt-4 max-w-[620px] text-base leading-7 text-[#666666]">
-            This route is wired so the BOOK button from the apartment detail
-            page lands on a valid escrow creation screen instead of a 404. The
-            full escrow form can be layered onto this route in the follow-up
-            issue.
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      <div className="w-full max-w-lg overflow-hidden rounded-2xl border border-border bg-card shadow-lg">
+        {imageSrc && (
+          <div className="relative h-48 w-full overflow-hidden bg-muted">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={imageSrc}
+              alt={apartment.name}
+              className="h-full w-full object-cover"
+              onError={(event) => {
+                (event.target as HTMLImageElement).style.display = "none";
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            <div className="absolute bottom-4 left-4 flex items-center gap-2 text-white">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500">
+                <Lock className="h-4 w-4" />
+              </div>
+              <span className="text-sm font-semibold">Booking Request Sent</span>
+            </div>
+          </div>
+        )}
+
+        <div className="space-y-5 p-6">
+          <div className="space-y-1">
+            <h1 className="text-lg font-bold text-foreground">{apartment.name}</h1>
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <MapPin className="h-3.5 w-3.5 shrink-0 text-orange-400" />
+              {apartment.address}
+            </div>
+          </div>
+
+          <div className="space-y-3 rounded-xl bg-muted p-4">
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Warranty deposit</span>
+              <span className="font-semibold text-foreground">
+                ${warrantyDeposit.toLocaleString()}
+              </span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Status</span>
+              <span className="font-medium text-yellow-500">Pending setup</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Beds / Baths</span>
+              <span className="flex items-center gap-2 font-medium text-foreground">
+                <BedDouble className="h-3.5 w-3.5" />
+                {apartment.bedrooms} bd
+                <Bath className="ml-1 h-3.5 w-3.5" />
+                {apartment.bathrooms} ba
+              </span>
+            </div>
+            {apartment.petFriendly && (
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Pet friendly</span>
+                <span className="flex items-center gap-1 font-medium text-green-500">
+                  <PawPrint className="h-3.5 w-3.5" />
+                  Yes
+                </span>
+              </div>
+            )}
+          </div>
+
+          <p className="rounded-lg border border-dashed border-border bg-background/50 p-3 text-center text-xs text-muted-foreground">
+            ⚠ Escrow creation will be wired to TrustlessWork in a future release.
+            This is a UI skeleton.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-4">
-            <Link
-              href={`/rent/${resolvedParams.id}`}
-              className="rounded-[10px] border border-[#d7cdc4] px-5 py-3 text-sm font-medium text-[#282828]"
+          <div className="flex gap-3 pt-1">
+            <Button
+              variant="outline"
+              className="flex-1"
+              onClick={() => router.push("/rent")}
             >
-              Back to apartment
-            </Link>
-            <Link
-              href="/rent"
-              className="rounded-[10px] bg-[#ff6a00] px-5 py-3 text-sm font-semibold text-white"
+              ← Back to browse
+            </Button>
+            <Button
+              className="flex-1 bg-orange-500 text-white hover:bg-orange-600"
+              onClick={() => router.push("/dashboard")}
             >
-              Browse more apartments
-            </Link>
+              Go to Dashboard →
+            </Button>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
