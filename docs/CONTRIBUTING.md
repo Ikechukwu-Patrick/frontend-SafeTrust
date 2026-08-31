@@ -52,7 +52,7 @@ const { data } = useQuery(GET_APARTMENTS);
 
 The global auth store is pre-seeded with mock values:
 
-```
+```text
 address:     "mock-owner-1"
 token:       "mock-jwt-token"
 isConnected: true
@@ -62,7 +62,7 @@ No login is required to access `/dashboard` in development.
 
 ## Sidebar navigation order
 
-```
+```text
 Escrows → Escrow Dashboard → Suggestions view → Rent →
 Hotels → New Hotel → Notifications → Messages →
 Favorite → Users → My apartments → New Apartment →
@@ -71,7 +71,7 @@ Interested People → [Logout]
 
 ## PR checklist
 
-- [ ] No Apollo, Firebase, or Hasura imports added
+- [ ] No Apollo Client, Firebase Auth calls, or Hasura queries/imports added
 - [ ] New data uses `src/lib/mockData/` files
 - [ ] Component works in both light and dark mode
 - [ ] No new `react-icons` imports (use `lucide-react` — already installed)
@@ -79,7 +79,7 @@ Interested People → [Logout]
 
 ## Branch naming
 
-```
+```text
 feat/issue-N-short-description
 fix/issue-N-short-description
 refactor/issue-N-short-description

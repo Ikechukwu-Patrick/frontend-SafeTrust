@@ -12,7 +12,7 @@
 
 ## Data layer
 
-```
+```text
 src/lib/mockData/          ← source of truth for stub data
 src/hooks/useApartments.ts ← mock hook (Apollo shape)
 ```
@@ -21,7 +21,7 @@ Every hook returns `{ data, loading, error }` matching Apollo's `useQuery` retur
 
 ## Provider stubs
 
-```
+```text
 src/providers/
 ├── TrustlessWorkProvider.tsx  ← pass-through (no SDK)
 ├── ApolloProviderWrapper.tsx  ← pass-through (no Apollo)

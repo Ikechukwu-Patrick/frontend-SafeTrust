@@ -2,7 +2,7 @@
 
 ## Title format
 
-```
+```text
 feat(component): short description
 fix(page): short description
 refactor(hook): short description
@@ -28,7 +28,7 @@ What is missing or broken. Must include:
 
 ### Branch Strategy
 
-```
+```text
 ✅  feat/issue-N-short-description → develop
 ❌  feat/issue-N-short-description → main
 ```
@@ -48,7 +48,7 @@ Numbered steps starting from `pnpm run dev`.
 
 ### Environment Details
 
-```
+```text
 Project Version:   frontend-SafeTrust develop
 Runtime:           Node.js 20+
 Package Manager:   pnpm
@@ -68,7 +68,7 @@ Port:              3000
 
 - [ ] `/route` returns 200 without build errors
 - [ ] Component renders in dark mode
-- [ ] No Apollo or Firebase imports added
+- [ ] No Apollo Client, Firebase Auth calls, or Hasura queries/imports added
 - [ ] Loom video in PR description
 
 **Contributing Guide links:**
