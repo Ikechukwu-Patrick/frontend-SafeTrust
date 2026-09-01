@@ -14,32 +14,33 @@ export default function HotelEscrowCreatePage({
   const router = useRouter();
   const resolvedParams = use(params);
   const apartment = getHotelById(resolvedParams.id);
+  const fallbackImageSrc = "/img/hotels.png";
   const imageSrc = apartment.images?.[0] ?? "/img/room1.png";
   const warrantyDeposit = Math.max(2400, Math.round(apartment.price * 0.6));
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <div className="w-full max-w-lg overflow-hidden rounded-2xl border border-border bg-card shadow-lg">
-        {imageSrc && (
-          <div className="relative h-48 w-full overflow-hidden bg-muted">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={imageSrc}
-              alt={apartment.name}
-              className="h-full w-full object-cover"
-              onError={(event) => {
-                (event.target as HTMLImageElement).style.display = "none";
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            <div className="absolute bottom-4 left-4 flex items-center gap-2 text-white">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500">
-                <Lock className="h-4 w-4" />
-              </div>
-              <span className="text-sm font-semibold">Booking Request Sent</span>
+        <div className="relative h-48 w-full overflow-hidden bg-muted">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={imageSrc || fallbackImageSrc}
+            alt={apartment.name}
+            className="h-full w-full object-cover"
+            onError={(event) => {
+              const target = event.target as HTMLImageElement;
+              target.src = fallbackImageSrc;
+              target.onerror = null;
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute bottom-4 left-4 flex items-center gap-2 text-white">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500">
+              <Lock className="h-4 w-4" />
             </div>
+            <span className="text-sm font-semibold">Booking Request Sent</span>
           </div>
-        )}
+        </div>
 
         <div className="space-y-5 p-6">
           <div className="space-y-1">
