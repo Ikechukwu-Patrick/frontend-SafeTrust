@@ -81,7 +81,7 @@ export default function EscrowCreatePage({
   const resolvedParams = use(params);
   const apartment = getHotelById(resolvedParams.id);
   const fallbackImageSrc = "/img/hotels.png";
-  const imageSrc = apartment.images?.[0] ?? "/img/room1.png";
+  const imageSrc = apartment.images?.[0] || fallbackImageSrc;
   const warrantyDeposit = Math.max(2400, Math.round(apartment.price * 0.6));
 
   return (
