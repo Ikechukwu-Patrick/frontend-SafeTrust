@@ -387,4 +387,132 @@ export const MOCK_MESSAGES: Record<string, MockMessage[]> = {
       },
     },
   ],
+  "conv-4": [
+    {
+      id: "msg-8",
+      body: "Hi, is this apartment available?",
+      is_automated: false,
+      event_type: null,
+      read_at: null,
+      created_at: new Date(Date.now() - 60 * 1000).toISOString(),
+      sender: {
+        id: "mock-guest-1",
+        first_name: "Guest",
+        last_name: "User",
+        email: "guest@test.com",
+      },
+    },
+  ],
+  "conv-5": [
+    {
+      id: "msg-9",
+      body: "Hi, is this apartment available?",
+      is_automated: false,
+      event_type: null,
+      read_at: null,
+      created_at: new Date(Date.now() - 60 * 1000).toISOString(),
+      sender: {
+        id: "mock-guest-1",
+        first_name: "Guest",
+        last_name: "User",
+        email: "guest@test.com",
+      },
+    },
+  ],
+  "conv-6": [
+    {
+      id: "msg-10",
+      body: "Hi, is this apartment available?",
+      is_automated: false,
+      event_type: null,
+      read_at: null,
+      created_at: new Date(Date.now() - 60 * 1000).toISOString(),
+      sender: {
+        id: "mock-guest-1",
+        first_name: "Guest",
+        last_name: "User",
+        email: "guest@test.com",
+      },
+    },
+  ],
+  "conv-7": [
+    {
+      id: "msg-11",
+      body: "Hi, is this apartment available?",
+      is_automated: false,
+      event_type: null,
+      read_at: null,
+      created_at: new Date(Date.now() - 60 * 1000).toISOString(),
+      sender: {
+        id: "mock-guest-1",
+        first_name: "Guest",
+        last_name: "User",
+        email: "guest@test.com",
+      },
+    },
+  ],
+  "conv-8": [
+    {
+      id: "msg-12",
+      body: "Hi, is this apartment available?",
+      is_automated: false,
+      event_type: null,
+      read_at: null,
+      created_at: new Date(Date.now() - 60 * 1000).toISOString(),
+      sender: {
+        id: "mock-guest-1",
+        first_name: "Guest",
+        last_name: "User",
+        email: "guest@test.com",
+      },
+    },
+  ],
+  "conv-9": [
+    {
+      id: "msg-13",
+      body: "Hi, is this apartment available?",
+      is_automated: false,
+      event_type: null,
+      read_at: null,
+      created_at: new Date(Date.now() - 60 * 1000).toISOString(),
+      sender: {
+        id: "mock-guest-1",
+        first_name: "Guest",
+        last_name: "User",
+        email: "guest@test.com",
+      },
+    },
+  ],
+  "conv-10": [
+    {
+      id: "msg-14",
+      body: "Hi, is this apartment available?",
+      is_automated: false,
+      event_type: null,
+      read_at: null,
+      created_at: new Date(Date.now() - 60 * 1000).toISOString(),
+      sender: {
+        id: "mock-guest-1",
+        first_name: "Guest",
+        last_name: "User",
+        email: "guest@test.com",
+      },
+    },
+  ],
+  "conv-11": [
+    {
+      id: "msg-15",
+      body: "Hi, is this apartment available?",
+      is_automated: false,
+      event_type: null,
+      read_at: null,
+      created_at: new Date(Date.now() - 60 * 1000).toISOString(),
+      sender: {
+        id: "mock-guest-1",
+        first_name: "Guest",
+        last_name: "User",
+        email: "guest@test.com",
+      },
+    },
+  ],
 };
