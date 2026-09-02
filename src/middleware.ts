@@ -13,6 +13,10 @@ const PUBLIC_PATHS = new Set([
   "/rent",
 ]);
 
+/**
+ * Determines whether a request targets an authenticated application route.
+ * Public pages and static assets are excluded before protected prefixes are checked.
+ */
 function isProtected(pathname: string): boolean {
   if (PUBLIC_PATHS.has(pathname)) return false;
 
@@ -44,6 +48,10 @@ function isProtected(pathname: string): boolean {
   return false;
 }
 
+/**
+ * Enforces the lightweight Edge-compatible Firebase cookie check for protected routes.
+ * Token signature verification remains in the server-side authentication boundary.
+ */
 export function middleware(req: NextRequest) {
   if (process.env.NEXT_PUBLIC_SKIP_AUTH_MIDDLEWARE === "true") {
     return NextResponse.next();
